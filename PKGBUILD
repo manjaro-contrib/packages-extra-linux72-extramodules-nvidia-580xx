@@ -7,8 +7,8 @@
 _linuxprefix=linux72
 
 pkgname="${_linuxprefix}-nvidia-580xx"
-pkgver=580.173.02
-pkgrel=0.10
+pkgver=580.178.04
+pkgrel=0.1
 pkgdesc="NVIDIA kernel modules for ${_linuxprefix}"
 arch=('x86_64')
 url="https://www.nvidia.com/"
@@ -18,22 +18,6 @@ depends=("${_linuxprefix}" "nvidia-580xx-utils=${pkgver}" 'libglvnd')
 makedepends=("${_linuxprefix}-headers" "nvidia-580xx-dkms=$pkgver")
 provides=("nvidia=${pkgver}" 'NVIDIA-MODULE')
 options=(!strip)
-source=('drm_atomic_state-to-commit.patch'
-         'strncpy_removed.patch')
-sha256sums=('3f0f958ca7741532b3427bd7280f681d59eb1f9837ddbd41418ad17a5463fd76'
-            'fdd60d8beb4a102e3522e6bcfc6ba55b66962f5de5e763903ae9a2ea28c92752')
-
-prepare() {
-  mkdir -p nvidia/${pkgver}/source_patched
-  cp -av /usr/src/nvidia-${pkgver}/* nvidia/${pkgver}/source_patched
-  cd nvidia/${pkgver}/source_patched
-  # https://github.com/babiulep/my-kernel-patches/blob/main/NVIDIA/7.1/610.43.02
-  # modified for 580.173.02
-  patch -p1 -i $srcdir/drm_atomic_state-to-commit.patch
-  patch -p1 -i $srcdir/strncpy_removed.patch
-  cd ..
-  ln -sfv source_patched source
-}
 
 build() {
     _kernver="$(cat /usr/src/${_linuxprefix}/version)"
